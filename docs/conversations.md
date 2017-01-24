@@ -348,4 +348,16 @@ $ curl -x POST 'http://localhost:3000/api/v1/conversations/12' -H message='<p>Ni
     - message-conversation linking is done by including the id of the conversation in sent emails (and hoping replies also contain the previous emails) by including them in the body or the subject field or both
 3. Messages will be sanitized on input and stored on the databased, then escaped on output (as pre http://lukeplant.me.uk/blog/posts/why-escape-on-input-is-a-bad-idea/).
 
+### OG Web Response
+
+The config file is `webresponse/config.php`
+
+The major controller file is the `webresponse/index.php`. It is the script that displays the web response form (template located in `webresponse/viewer/webresponse_form.php` and display method located in `webresponse/controller/display_form.php`). Note that The form is secretly embedded with a key, as well as `a` (action) and `f` (form) inputs.
+
+When the form is submitted (to `action='index.php'`), `webresponse/lib/core.php` catches it and routes it to `process_form.php`. Inputs are parsed from $_GET to $CLEAN_GET and likewise for $_POST in `webresponse/lib/cleandata.php`, caleed just before request routing.
+
+
+
+When
+
 ## References
