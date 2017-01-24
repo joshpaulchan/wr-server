@@ -38,27 +38,28 @@ class Conversations_model extends CI_Model {
 	**/
     public function get_conversation($id) {
 		// get conversation
-		$conversations = $this->db
+		$query = $this->db
 					->get('conversations')
 					->where('id', $id)
 					->limit(1, 0)
 					->result_array();
 
-		if (count($conversations) === 0) {
+		if ($query->num_rows() === 0) {
 			// exit and return 404
 			return [
 				"error" => "Cannot find conversation the id:".$id
 			];
 		}
+		$conversation = $query->row();
 
 		// get conversation messages
 		$messages = $this->db
 						->get('messages')
 						->where('conversation_id', $id)
 						->result_array();
-		$conversations['messages'] = $messages;
+		$conversation['messages'] = $messages;
 
-		return $conversations;
+		return $conversation;
     }
 
 	/**
@@ -70,16 +71,35 @@ class Conversations_model extends CI_Model {
 	* @param	:
 	* @return	: null
 	**/
-	public function create() {
+	public function create($data) {
+		// FIXME: match to real inputs
 		$conversation = [
-
+			'id'			=> 'do i decide?',
+			'emailFrom'		=> $data['emailFrom'],
+			'subject'		=> $data['subject'],
+			'unread'		=> true,
+			'unreplied'		=> true,
+			'location'		=> 'inbox',
+			'ip'			=> $data['ip'],
+			'referrer'		=> $data['referrer'],
+			'userAgent'		=> $data['userAgent'],
+			'browser'		=> $data['browser'],
+			'os'			=> $data['os'],
+			'createdAt'		=> 'now',
+			'lastUpdate'	=> 'now'
 		];
 
 		// insert conversation and message
 		$convo = $this->db->insert('conversations', $conversation);
 
 		$message = [
-
+			'id'				=> 'us?',
+			'emailFrom'			=> $data['emailFrom'],
+			'emailTo'			=> 'us or webstaff.rutgers.edu',
+			'body'				=> $data['body'],
+			'conversation_id'	=> $conversation['id'],
+			'createdAt'			=> 'now',
+			'lastUpdate'		=> 'now'
 		];
 
 		$this->db->insert('messages', $message);
