@@ -53,7 +53,7 @@ $config['index_page'] = ""; // mod_rewrite in the .htacess is removing index.php
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= 'REQUEST_URI';
+$config['uri_protocol']	= 'AUTO';
 
 /*
 |--------------------------------------------------------------------------

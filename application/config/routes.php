@@ -42,5 +42,13 @@ $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
 
+// routes for `conversations` resource
+$route['conversations/(:any)'] = "conversations/index/$1";
+$route['conversation/(:any)'] = "conversation/index/$1";
+$route['welcome/test'] = "welcome/test";
+
+// CLI
+$route['seed'] = "seed";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
