@@ -46,7 +46,7 @@ class Seed extends CI_Controller {
 			$unread = $faker->boolean;
 			$email = $faker->email;
 			$createdAt = $faker->dateTimeThisDecade;
-			$convo = $this->db->insert('conversations', [
+			$this->db->insert('conversations', [
 				'emailFrom'		=> $email,
 				'subject'		=> $faker->catchPhrase,
 				'unread'		=> (int)($unread),
@@ -59,6 +59,7 @@ class Seed extends CI_Controller {
 				'referrer'		=> 'http://rutgers.edu/'.$faker->slug,
 			]);
 
+			$convo_id = $this->db->insert_id();
 			$num_messages = 3;
 			for ($x=0; $x < $num_messages; $x++) {
 				// insert messages
@@ -67,7 +68,7 @@ class Seed extends CI_Controller {
 					'emailFrom'			=> $faker->randomElement([ $email, 'us' ]),
 					'emailTo'			=> $faker->randomElement([ $email, 'us' ]),
 					'body'				=> $faker->paragraph,
-					'conversation_id'	=> $this->db->insert_id()
+					'conversation_id'	=> $convo_id
 				]);
 			}
 		}
