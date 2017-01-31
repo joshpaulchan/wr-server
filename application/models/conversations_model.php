@@ -59,6 +59,28 @@ class Conversations_model extends CI_Model {
     }
 
 	/**
+	* Create a new message.
+	*
+	* @pre		: `$id` must be a valid conversation id
+	* @post		: a query will be made to the database to fetch conversations and messages
+	* @post		: a conversation object will be returned
+	*
+	* @param	: int		: $id	: the id of the conversation to retrieve
+	* @return	: array 	: conversation object
+	**/
+	public function create_reply($id, $sentTo, $sentBy, $body) {
+		// get conversation messages
+		$messages = $this->db->insert('messages', [
+			'emailFrom'			=> $sentBy,
+			'emailTo'			=> $sentTo,
+			'body'				=> $body,
+			'conversation_id'	=> $id
+		]);
+
+		return $conversation;
+	}
+
+	/**
 	* TODO: Create a new conversation  and message.
 	*
 	* @pre		:
