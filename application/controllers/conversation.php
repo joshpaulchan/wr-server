@@ -59,19 +59,28 @@ class Conversation extends CI_Controller {
 		];
 		$this->email->initialize($email_config);
 
-		// send email
+		// configure email
 		$our = [
 			'email'	=> 'webstaff@ucm.rutgers.edu',
 			'name'	=> 'Rutgers UCM Web Staff'
 		];
+		// FIXME: import a template for the body
+		$full_body = $body;
+
+		// send email
 		$this->email->from($our->email, $our->name);
 		$this->email->to($convo->emailFrom);
 		$this->email->subject('['.$convo->id.'] - '.$convo->subject);
-		$this->email->message($body);
+		$this->email->message($full_body);
 		$this->email->send();
 
 		// create record
-
+		$this->conversations_model->create_reply(
+			$id,
+			$our->email,
+			$convo->emailFrom,
+			$full_body
+		);
 	}
 
 	public function update() {
