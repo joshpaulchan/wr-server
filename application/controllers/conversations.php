@@ -59,11 +59,16 @@ class Conversations extends CI_Controller {
 			"data" 			=> $conversations
 		];
 
-		echo $this->_send_json($data);
-		return;
+		$this->_send_json($data);
 	}
 
 	public function create() {
+
+		// validate form
+
+		// return errors
+
+		// else create new conversation
 
 	}
 
@@ -77,8 +82,9 @@ class Conversations extends CI_Controller {
 		// return;
 
 		// format response
-		$this->output->set_content_type('application/json');
-		return json_encode($data);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data));
 	}
 }
 
