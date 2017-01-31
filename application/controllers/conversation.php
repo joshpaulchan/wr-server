@@ -28,9 +28,9 @@ class Conversation extends CI_Controller {
 	* @param	: int		: id	: the specific page of conversations to load
 	* @return	: array 	: object with conversation and its messages if it exists
 	**/
-	public function index($page=0, $n=25, $q='') {
+	public function index($id) {
 		// fetch conversation and its messages
-		$data = $this->conversations_model->get_convo($id);
+		$data = $this->conversations_model->get_conversation($id);
 		$this->_send_json($data);
 		// return;
 	}
@@ -56,5 +56,5 @@ class Conversation extends CI_Controller {
 	}
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file conversation.php */
+/* Location: ./application/controllers/conversation.php */
