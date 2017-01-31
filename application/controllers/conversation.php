@@ -14,6 +14,9 @@ class Conversation extends CI_Controller {
 		// load db model
 		$this->load->model('conversations_model');
 
+		// load email lib
+		$this->load->library('email');
+
 		// prevent caching
 		$this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
@@ -35,7 +38,39 @@ class Conversation extends CI_Controller {
 		// return;
 	}
 
-	public function create() {
+	/**
+	* TODO: Create a reply message and send it to the other participant of the conversation.
+	*
+	* @post : returns a JSON object with conversation details and messages
+	*
+	* @param	: int		: id	: the specific page of conversations to reply to
+	* @param	: string	: body	: the body of the reply message
+	* @return	: array 	: object with conversation and its messages if it exists
+	**/
+	public function create($id, $body) {
+		$convo = $this->conversations_model->get_conversation($id);
+
+		// set email config
+		$config = [
+			'userAgent'	=> 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
+			'mailtype'	=> 'html',
+			'crlf'		=> '\r\n',
+			'newline'	=> '\r\n'
+		];
+		$this->email->initialize($email_config);
+
+		// send email
+		$our = [
+			'email'	=> 'webstaff@ucm.rutgers.edu',
+			'name'	=> 'Rutgers UCM Web Staff'
+		];
+		$this->email->from($our->email, $our->name);
+		$this->email->to($convo->emailFrom);
+		$this->email->subject('['.$convo->id.'] - '.$convo->subject);
+		$this->email->message($body);
+		$this->email->send();
+
+		// create record
 
 	}
 
