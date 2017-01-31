@@ -34,15 +34,12 @@ class Conversations_model extends CI_Model {
 	* @post		: a conversation object will be returned
 	*
 	* @param	: int		: $id	: the id of the conversation to retrieve
-	* @return	: object 	: conversation object
+	* @return	: array 	: conversation object
 	**/
     public function get_conversation($id) {
 		// get conversation
 		$query = $this->db
-					->get('conversations')
-					->where('id', $id)
-					->limit(1, 0)
-					->result_array();
+					->get_where('conversations', ['id' => $id], 1, 0);
 
 		if ($query->num_rows() === 0) {
 			// exit and return 404
@@ -50,12 +47,11 @@ class Conversations_model extends CI_Model {
 				"error" => "Cannot find conversation the id:".$id
 			];
 		}
-		$conversation = $query->row();
+		$conversation = (array)($query->row());
 
 		// get conversation messages
 		$messages = $this->db
-						->get('messages')
-						->where('conversation_id', $id)
+						->get_where('messages', ['conversation_id' => $id])
 						->result_array();
 		$conversation['messages'] = $messages;
 
