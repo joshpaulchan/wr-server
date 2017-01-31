@@ -1,0 +1,8 @@
+{
+    "require": {
+        "fzaninotto/faker": "^1.6"
+    },
+    "config" : {
+        "vendor-dir" : "application/third_party"
+    }
+}
