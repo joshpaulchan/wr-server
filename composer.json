@@ -1,6 +1,7 @@
 {
     "require": {
-        "fzaninotto/faker": "^1.6"
+        "fzaninotto/faker": "^1.6",
+        "ua-parser/uap-php": "^3.4"
     },
     "config" : {
         "vendor-dir" : "application/third_party"
