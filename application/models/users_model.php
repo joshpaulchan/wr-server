@@ -90,8 +90,8 @@ class Users_model extends CI_Model {
 	**/
 	public function create($email, $password) {
 		$user = [
-			'email'		=> $data['email'],
-			'password'	=> $data['password']
+			'email'		=> $email,
+			'password'	=> $password
 		];
 
 		// insert user and message
