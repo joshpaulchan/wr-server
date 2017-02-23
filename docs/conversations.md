@@ -354,10 +354,8 @@ The config file is `webresponse/config.php`
 
 The major controller file is the `webresponse/index.php`. It is the script that displays the web response form (template located in `webresponse/viewer/webresponse_form.php` and display method located in `webresponse/controller/display_form.php`). Note that The form is secretly embedded with a key, as well as `a` (action) and `f` (form) inputs.
 
-When the form is submitted (to `action='index.php'`), `webresponse/lib/core.php` catches it and routes it to `process_form.php`. Inputs are parsed from $_GET to $CLEAN_GET and likewise for $_POST in `webresponse/lib/cleandata.php`, caleed just before request routing.
+When the form is submitted (to `action='index.php'`), `webresponse/lib/core.php` catches it and routes it to `controller/process_form.php`. Inputs are parsed from $_GET to $CLEAN_GET and likewise for $_POST in `webresponse/lib/cleandata.php`, called just before request routing.
 
-
-
-When
+Actual insertion is done via the `Webresponse` class, located in `lib/classes/Webresponse.class.php`.
 
 ## References

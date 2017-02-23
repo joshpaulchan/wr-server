@@ -1,4 +1,61 @@
 # Users and Authentication
+
+## Flows
+
+### Log in
+Pre-authorized users can log-in via the `/login` page.
+
+1. Navigate to the login page (when visiting web response, it is the first and default page)
+2. Enter authorized netid email and password
+3. Click login
+4. If successful, browser will navigate to conversations page
+5. If not, browser will show generic error message
+
+### Logout
+
+1. Go to the settings page
+2. Press logout -> browser will redirect back to the login page
+
+### Registration
+The registration flow is two-part, sort of like an inverted invite system. A person attempting to create a user account must apply, and an admin of the system will can  then choose to approve the user application.
+
+**Applicant**
+
+1. Navigate to the login page (when visiting web response, it is the first and default page)
+2. Click register -> browser will navigate to registration page
+3. Enter netid email, password, and password confirmation
+4. If successful, will present confirmation page.
+
+**Admin**
+
+1. Navigate to the users page
+2. From the users page, you should be able to see users that are pending approval
+3. Select user you want to approve by clicking the button saying approve
+
+### Removing a user/yourself
+Admins can remove users as they please, users can only remove a user if it is himself/herself that is being removed.
+
+1. Go to user page
+2. Hover over user you would like to remove
+3. Click the x button that appears and verify confirmation
+
+### Change email
+
+1. Go to settings page -> profile is the first tab
+2. Change the listed email in the input field
+3. Enter it
+
+### Change password
+
+1. Go to settings page -> profile is the first tab
+2. Type old password
+3. Type new password and password confirm
+4. Enter it
+
+
+
+## Wireframes
+
 ## Model
 
 **Key**
