@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 use Hautelook\Phpass\PasswordHash;
+require_once __DIR__.'/../third_party/autoload.php';
 
 class Auth extends CI_Controller {
 
@@ -40,7 +41,7 @@ class Auth extends CI_Controller {
 		$pw = $this->input->post('password');
 
 		// Get user by email
-		$data = $this->users_model->get_by_email($email);
+		$data = $this->users_model->get_user_by_email($email);
 
 		if (array_key_exists('errror', $data)) {
 			return $this->_send_json([
@@ -50,12 +51,14 @@ class Auth extends CI_Controller {
 		}
 
 		// Check password
-		if (!$this->_passwords_match($pw, $user->pw)) {
+		if (!$this->_passwords_match($pw, $data['password'])) {
 			return $this->_send_json([
 				'error' => true,
 				'message' => 'Password is incorrect.'
 			]);
 		}
+
+		// TODO: add user to session
 
 		$this->_send_json($data);
 	}
@@ -82,7 +85,7 @@ class Auth extends CI_Controller {
 		}
 
 		// check email hasn't been used
-		$resp = $this->users_model->get_by_email($email);
+		$resp = $this->users_model->get_user_by_email($email);
 
 		if (!array_key_exists('error', $resp)) {
 			return $this->_send_json([
@@ -92,7 +95,7 @@ class Auth extends CI_Controller {
 		}
 
 		// create new user
-		$u = $this->users_model->create($email, $this->pwHasher->HashPashword($pw));
+		$u = $this->users_model->create($email, $this->pwHasher->HashPassword($pw));
 
 		return null;
 
