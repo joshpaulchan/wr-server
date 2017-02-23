@@ -147,7 +147,7 @@ Admins can remove users as they please, users can only remove a user if it is hi
         <td>
             **body**
             <ul>
-            <li>**username** - username for the account</li>
+            <li>**email** - email for the account</li>
             <li>**password** - password for the account</li>
             </ul>
             Returns a JWT for future authentication use
@@ -159,7 +159,7 @@ Admins can remove users as they please, users can only remove a user if it is hi
         <td>
             **body**
             <ul>
-            <li>**username** - intended username for the account</li>
+            <li>**email** - intended email for the account</li>
             <li>**password** - intended password for the account</li>
             </ul>
         </td>
