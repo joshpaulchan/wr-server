@@ -145,12 +145,12 @@ Admins can remove users as they please, users can only remove a user if it is hi
         <th>POST `/auth/login`</th>
         <td>attempt to log in to web response</td>
         <td>
+            **@pre** - the user attempting to log in must be approved.</br>
             **body**
             <ul>
             <li>**email** - email for the account</li>
             <li>**password** - password for the account</li>
             </ul>
-            Returns a JWT for future authentication use
         </td>
     </tr>
     <tr>
@@ -176,6 +176,30 @@ Admins can remove users as they please, users can only remove a user if it is hi
             <li>**email** - intended email for the account</li>
             <li>**password** - intended password for the account</li>
             </ul>
+        </td>
+    </tr>
+    <tr>
+        <th>POST `/auth/escalate/:id`</th>
+        <td>escalates a regular user to admin statuss</td>
+        <td>
+            **@pre** - user submitting the request has to be an admin.<br/>
+            **id** - id of **User** record to escalate
+        </td>
+    </tr>
+    <tr>
+        <th>POST `/auth/deescalate/:id`</th>
+        <td>de-escalates an admin user to regular user status</td>
+        <td>
+            **@pre** - user submitting the request has to be an admin.<br/>
+            **id** - id of **User** record to deescalate
+        </td>
+    </tr>
+    <tr>
+        <th>POST `/auth/approve/:id`</th>
+        <td>approves an applicant and makes them a regular user</td>
+        <td>
+            **@pre** - user submitting the request has to be an admin.<br/>
+            **id** - id of **User** record to approve
         </td>
     </tr>
 </tbody>
@@ -221,17 +245,14 @@ Admins can remove users as they please, users can only remove a user if it is hi
     </tr>
     <tr>
         <th>PUT `/user/:id`</td>
-        <td>update a user's *username*, *password* or *admin* status</td>
+        <td>update a user's *email* or *password*</td>
         <td>
-            **@pre** - to change `username` or `password`, the user submitting the request must be the same as the user specified via `id`.<br/>
-            **@pre** - to change `admin` or `approved`, the user submitting the request must be an admin.<br/><br/>
+            **@pre** - to change `email` or `password`, the user submitting the request must be the same as the user specified via `id`.<br/>
             **id** - id of **User** record to modify<br/>
             **body**
             <ul>
-                <li>**username** *[optional]* - the username to change to</li>
+                <li>**email** *[optional]* - the email to change to</li>
                 <li>**password** *[optional]* - the password to change to</li>
-                <li>**admin** *[optional]* - the admin status of the account</li>
-                <li>**approved** *[optional]* - the approval status of the account</li>
             </ul>
         </td>
     </tr>
@@ -278,4 +299,5 @@ $ curl -x DELETE 'http://localhost:3000/api/v1/user/12'
 
 ## Design
 
-1. Primary backbone for authentication is JWTs.
+1. Primary backbone for authentication is sessions.
+2. You'll notice that while there is a `/escalate` and a corresponding `/deescalate`, there is not pair for `/approve`. That is because once a user has been approved for use, she can only be removed or escalated/deescalated.
