@@ -99,7 +99,7 @@ class Auth extends CI_Controller {
 	* @return	: array 	: JSON object with 'loggedIn' key being true is user in
 	* session, false otherwise.
 	**/
-	public function is_logged_in() {
+	public function loggedIn() {
 		// Check if user in session
 		$sess_data = $this->session->all_userdata();
 
