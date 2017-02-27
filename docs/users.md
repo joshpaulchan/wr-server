@@ -154,14 +154,14 @@ Admins can remove users as they please, users can only remove a user if it is hi
         </td>
     </tr>
     <tr>
-        <th>POST `/auth/logout`</th>
+        <th>GET `/auth/logout`</th>
         <td>attempt to log out of web response</td>
         <td>
             user attempting to logout is recognized from session data.
         </td>
     </tr>
     <tr>
-        <th>POST `/auth/is-logged-in`</th>
+        <th>GET `/auth/loggedIn`</th>
         <td>check is user is logged in to web response</td>
         <td>
             session data is checked for user info.
