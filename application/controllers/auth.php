@@ -184,11 +184,44 @@ class Auth extends CI_Controller {
 		}
 
 		// escalate user
-		$u = $this->users_model->approve($id);
+		$u = $this->users_model->set_admin($id, true);
 
 		return null;
 	}
 
+	/**
+	* Deescalates an admin user to a regular user.
+	*
+	* @pre		: the user submitting this request must be an admin user
+	*
+	* @return	: null if successful, error object o.w.
+	**/
+	public function deescalate($id) {
+		// check logged in
+		$sess_data = $this->session->all_userdata();
+
+		if (!array_key_exists("user", $sess_data)) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You are not logged in.'
+			], 401);
+		}
+
+		$user = $this->session->all_userdata()['user'];
+
+		// verify admin status
+		if ($user['admin'] === false) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You do not have the permissions to deescalate users.'
+			], 403);
+		}
+
+		// escalate user
+		$u = $this->users_model->set_admin($id, false);
+
+		return null;
+	}
 	/**
 	* Check each password to see if they are equivalent.
 	*
