@@ -46,11 +46,11 @@ class Auth extends CI_Controller {
 		// Get user by email
 		$data = $this->users_model->get_user_by_email($email);
 
-		if (array_key_exists('errror', $data)) {
+		if (array_key_exists('error', $data)) {
 			return $this->_send_json([
 				'error' => true,
 				'message' => "Error logging user in."
-			]);
+			], 500);
 		}
 
 		// Check if approved
@@ -58,7 +58,7 @@ class Auth extends CI_Controller {
 			return $this->_send_json([
 				'error' => true,
 				'message' => 'You have not be approved to use Web-Response yet.'
-			]);
+			], 401);
 		}
 
 		// Check password
@@ -66,7 +66,7 @@ class Auth extends CI_Controller {
 			return $this->_send_json([
 				'error' => true,
 				'message' => 'Password is incorrect.'
-			]);
+			], 401);
 		}
 		// remove pw
 		unset($data["password"]);
@@ -144,7 +144,7 @@ class Auth extends CI_Controller {
 			return $this->_send_json([
 				'error' => true,
 				'errorMessage' => 'Error registering the user.'
-			]);
+			], 500);
 		}
 
 		// create new user
@@ -152,6 +152,41 @@ class Auth extends CI_Controller {
 
 		return null;
 
+	}
+
+	/**
+	* Escalates a regular user to admin status.
+	*
+	* @pre		: the user submitting this request must be an admin user
+	*
+	* @return	: null if successful, error object o.w.
+	**/
+	public function escalate($id) {
+		// check logged in
+		// Check if user in session
+		$sess_data = $this->session->all_userdata();
+
+		if (!array_key_exists("user", $sess_data)) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You are not logged in.'
+			], 401);
+		}
+
+		$user = $this->session->all_userdata()['user'];
+
+		// verify admin status
+		if ($user['admin'] === false) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You do not have the permissions to escalate users.'
+			], 403);
+		}
+
+		// escalate user
+		$u = $this->users_model->approve($id);
+
+		return null;
 	}
 
 	/**
@@ -165,13 +200,14 @@ class Auth extends CI_Controller {
 		return $this->pwHasher->CheckPassword($pwa, $pwb);
 	}
 
-	private function _send_json($data) {
+	private function _send_json($data, $code=200) {
 		// log vars
 		// echo var_dump($data);
 		// return;
 
 		// format response
 		$this->output
+			->set_status_header($code)
 			->set_content_type('application/json')
 			->set_output(json_encode($data));
 	}
