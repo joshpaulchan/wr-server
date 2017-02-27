@@ -53,6 +53,14 @@ class Auth extends CI_Controller {
 			]);
 		}
 
+		// Check if approved
+		if ($data['approved'] === false) {
+			return $this->_send_json([
+				'error' => true,
+				'message' => 'You have not be approved to use Web-Response yet.'
+			]);
+		}
+
 		// Check password
 		if (!$this->_passwords_match($pw, $data['password'])) {
 			return $this->_send_json([
