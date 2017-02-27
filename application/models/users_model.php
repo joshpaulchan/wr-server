@@ -115,12 +115,28 @@ class Users_model extends CI_Model {
 	* TODO: Remove a user.
 	*
 	* @pre		: the given `$id` should refer to an existing user record
-	* @post		: [success]
+	* @post		: [success] the given user object will be removed
 	*
 	* @param	: int	: $id	: the id of the user to delete
 	* @return	: null
 	**/
 	public function remove($id) {
+		$this->db->delete('users', [ 'id' => $id ]);
+		return;
+	}
+
+	/**
+	* Approve a user.
+	*
+	* @pre		: the given `$id` should refer to an existing user record
+	* @post		: [success] the user's `approved` attribute will be set to true
+	*
+	* @param	: int	: $id	: the id of the user to approve
+	* @return	: null
+	**/
+	public function approve($id) {
+		// update user `approvd` =  true  if they have the given id
+		$this->db->update('users', [ 'approved' => true ], [ 'id' => $id ]);
 		return;
 	}
 
