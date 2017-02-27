@@ -229,12 +229,12 @@ class Auth extends CI_Controller {
 		if ($user['admin'] === false) {
 			return $this->_send_json([
 				'error' => true,
-				'errorMessage' => 'You do not have the permissions to deescalate users.'
+				'errorMessage' => 'You do not have the permissions to approve users.'
 			], 403);
 		}
 
 		// escalate user
-		$u = $this->users_model->set_admin($id, false);
+		$u = $this->users_model->approve($id);
 
 		return null;
 	}
