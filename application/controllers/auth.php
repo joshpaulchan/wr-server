@@ -57,6 +57,8 @@ class Auth extends CI_Controller {
 				'message' => 'Password is incorrect.'
 			]);
 		}
+		// remove pw
+		unset($data["password"]);
 
 		// TODO: add user to session
 
