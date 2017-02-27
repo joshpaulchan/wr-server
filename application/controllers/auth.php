@@ -84,18 +84,13 @@ class Auth extends CI_Controller {
 	*
 	* @param	: string	: email		: the email of the user attempting login
 	* @param	: string	: password	: the password of the user attempting login
-	* @return	: array 	: object with conversation results
+	* @return	: null
 	**/
 	public function logout() {
-		// Check if user in session
-		$sess_data = $this->session->all_userdata();
-
 		// delete session
-		if (array_key_exists("user", $sess_data)) {
-			$this->session->sess_destroy();
-		}
+		if ($this->_is_logged_in()) { $this->session->sess_destroy(); }
 
-		$this->_send_json([]);
+		return null;
 	}
 
 	/**
@@ -108,12 +103,7 @@ class Auth extends CI_Controller {
 	* session, false otherwise.
 	**/
 	public function loggedIn() {
-		// Check if user in session
-		$sess_data = $this->session->all_userdata();
-
-		$this->_send_json([
-			"loggedIn" => array_key_exists("user", $sess_data)
-		]);
+		$this->_send_json([ "loggedIn" => $this->_is_logged_in() ]);
 	}
 
 	/**
@@ -124,7 +114,6 @@ class Auth extends CI_Controller {
 	* @return	: null if successful, error object o.w.
 	**/
 	public function register() {
-
 		// validate form
 		$email = $this->input->post('email');
 		$pw = $this->input->post('password');
@@ -163,10 +152,7 @@ class Auth extends CI_Controller {
 	**/
 	public function escalate($id) {
 		// check logged in
-		// Check if user in session
-		$sess_data = $this->session->all_userdata();
-
-		if (!array_key_exists("user", $sess_data)) {
+		if (!$this->_is_logged_in()) {
 			return $this->_send_json([
 				'error' => true,
 				'errorMessage' => 'You are not logged in.'
@@ -198,9 +184,7 @@ class Auth extends CI_Controller {
 	**/
 	public function deescalate($id) {
 		// check logged in
-		$sess_data = $this->session->all_userdata();
-
-		if (!array_key_exists("user", $sess_data)) {
+		if (!$this->_is_logged_in()) {
 			return $this->_send_json([
 				'error' => true,
 				'errorMessage' => 'You are not logged in.'
@@ -222,6 +206,39 @@ class Auth extends CI_Controller {
 
 		return null;
 	}
+
+	/**
+	* Deescalates an admin user to a regular user.
+	*
+	* @pre		: the user submitting this request must be an admin user
+	*
+	* @return	: null if successful, error object o.w.
+	**/
+	public function approve($id) {
+		// check logged in
+		if (!$this->_is_logged_in()) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You are not logged in.'
+			], 401);
+		}
+
+		$user = $this->session->all_userdata()['user'];
+
+		// verify admin status
+		if ($user['admin'] === false) {
+			return $this->_send_json([
+				'error' => true,
+				'errorMessage' => 'You do not have the permissions to deescalate users.'
+			], 403);
+		}
+
+		// escalate user
+		$u = $this->users_model->set_admin($id, false);
+
+		return null;
+	}
+
 	/**
 	* Check each password to see if they are equivalent.
 	*
@@ -231,6 +248,16 @@ class Auth extends CI_Controller {
 	**/
 	private function _passwords_match($pwa, $pwb) {
 		return $this->pwHasher->CheckPassword($pwa, $pwb);
+	}
+
+	/**
+	* Checks the session data to see if user is logged in.
+	*
+	* @return	: bool	: true if user is logged in, false o.w.
+	**/
+	private function _is_logged_in() {
+		$sess_data = $this->session->all_userdata();
+		return array_key_exists("user", $sess_data);
 	}
 
 	private function _send_json($data, $code=200) {
