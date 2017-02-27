@@ -135,11 +135,25 @@ class Users_model extends CI_Model {
 	* @return	: null
 	**/
 	public function approve($id) {
-		// update user `approvd` =  true  if they have the given id
+		// update user `approved` =  true  if they have the given id
 		$this->db->update('users', [ 'approved' => true ], [ 'id' => $id ]);
 		return;
 	}
 
+	/**
+	* Set the admin status of a user.
+	*
+	* @pre		: the given `$id` should refer to an existing user record
+	* @post		: [success] the user's `admin` attribute may be modified
+	*
+	* @param	: int	: $id	: the id of the user to modify
+	* @return	: null
+	**/
+	public function set_admin($id, $status) {
+		// update user `admin` attribute
+		$this->db->update('users', [ 'admin' => (bool)$status ], [ 'id' => $id ]);
+		return;
+	}
 
 	/**
 	* Format the user object for retrieval.
