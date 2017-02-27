@@ -34,9 +34,11 @@ class Users_model extends CI_Model {
 	* @post		: a user object will be returned
 	*
 	* @param	: int		: id	: the id of the user to retrieve
+	* @param	: bool		: raw	: whether to return user straight from DB or clean it
+	* up, default false
 	* @return	: array 	: user object
 	**/
-    public function get_user_by_id($id) {
+    public function get_user_by_id($id, $raw=false) {
 		// get user
 		$query = $this->db
 					->get_where('users', ['id' => $id], 1, 0);
@@ -49,7 +51,11 @@ class Users_model extends CI_Model {
 		}
 		$user = (array)($query->row());
 
-		return $user;
+		if ($raw === true) {
+			return $user;
+		} else {
+			return $this->_format_user_object($user);
+		}
     }
 
 	/**
@@ -60,9 +66,11 @@ class Users_model extends CI_Model {
 	* @post		: a user object will be returned
 	*
 	* @param	: string	: email	: the id of the user to retrieve
+	* @param	: bool		: raw	: whether to return user straight from DB or clean it
+	* up, default false
 	* @return	: array 	: user object
 	**/
-    public function get_user_by_email($email) {
+    public function get_user_by_email($email, $raw=false) {
 		// get user
 		$query = $this->db
 					->get_where('users', ['email' => $email], 1, 0);
@@ -75,7 +83,11 @@ class Users_model extends CI_Model {
 		}
 		$user = (array)($query->row());
 
-		return $user;
+		if ($raw === true) {
+			return $user;
+		} else {
+			return $this->_format_user_object($user);
+		}
     }
 
 	/**
@@ -105,11 +117,32 @@ class Users_model extends CI_Model {
 	* @pre		: the given `$id` should refer to an existing user record
 	* @post		: [success]
 	*
-	* @param	: Integer	: $id	: the id of the user to delete
+	* @param	: int	: $id	: the id of the user to delete
 	* @return	: null
 	**/
 	public function remove($id) {
 		return;
+	}
+
+
+	/**
+	* Format the user object for retrieval.
+	*
+	* @pre		: the given `$user` should be an associative array
+	* @post		: the given `$user` will not be modified
+	*
+	* @param	: array 	: user	: the user object to format
+	* @return	: array 	: the formatted user object
+	**/
+	private function _format_user_object($user) {
+		return [
+			"id" => (int)$user["id"],
+			"email" => $user["email"],
+			"admin" => (bool)$user["admin"],
+			"approved" => (bool)$user["approved"],
+			"createdAt" => $user["createdAt"],
+			"lastUpdated" => $user["lastUpdated"]
+		];
 	}
 
 }

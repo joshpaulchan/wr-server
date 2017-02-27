@@ -60,7 +60,14 @@ class Auth extends CI_Controller {
 
 		// TODO: add user to session
 
-		$this->_send_json($data);
+		$this->_send_json([
+			"id" => $data["id"],
+			"email" => $data["email"],
+			"admin" => (bool)$data["admin"],
+			"approved" => (bool)$data["approved"],
+			"createdAt" => $data["createdAt"],
+			"lastUpdated" => $data["lastUpdated"],
+		]);
 	}
 
 	/**
