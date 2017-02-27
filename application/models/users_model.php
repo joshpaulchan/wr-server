@@ -139,6 +139,7 @@ class Users_model extends CI_Model {
 			"id" => (int)$user["id"],
 			"email" => $user["email"],
 			"admin" => (bool)$user["admin"],
+			"password" => $user["password"],
 			"approved" => (bool)$user["approved"],
 			"createdAt" => $user["createdAt"],
 			"lastUpdated" => $user["lastUpdated"]
