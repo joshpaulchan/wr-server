@@ -24,12 +24,15 @@ class Auth extends CI_Controller {
 
 		// initialize password hasher
 		$this->pwHasher = new PasswordHash(8, false);
+
+		// initialize sessions
+		$this->load->library('session');
 	}
 
 	/**
 	* Attempt to log into web response.
 	*
-	* @post : returns a JSON object with links to next queries/pages and pages themselves
+	* @post : returns a JSON object with user info, minus pw
 	*
 	* @param	: string	: email		: the email of the user attempting login
 	* @param	: string	: password	: the password of the user attempting login
@@ -60,9 +63,49 @@ class Auth extends CI_Controller {
 		// remove pw
 		unset($data["password"]);
 
-		// TODO: add user to session
+		// add user to session
+		$this->session->set_userdata(["user" => $data]);
 
 		$this->_send_json($data);
+	}
+
+	/**
+	* Attempt to log user out of web response.
+	*
+	* @post : returns an empty JSON object
+	*
+	* @param	: string	: email		: the email of the user attempting login
+	* @param	: string	: password	: the password of the user attempting login
+	* @return	: array 	: object with conversation results
+	**/
+	public function logout() {
+		// Check if user in session
+		$sess_data = $this->session->all_userdata();
+
+		// delete session
+		if (array_key_exists("user", $sess_data)) {
+			$this->session->sess_destroy();
+		}
+
+		$this->_send_json([]);
+	}
+
+	/**
+	* Checks if user is currently logged in.
+	*
+	* @post	: returns a JSON object with a boolean "loggedIn" key, depending on
+	* if a user is logged in or not.
+	*
+	* @return	: array 	: JSON object with 'loggedIn' key being true is user in
+	* session, false otherwise.
+	**/
+	public function is_logged_in() {
+		// Check if user in session
+		$sess_data = $this->session->all_userdata();
+
+		$this->_send_json([
+			"loggedIn" => array_key_exists("user", $sess_data)
+		]);
 	}
 
 	/**
