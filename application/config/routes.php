@@ -44,6 +44,7 @@ $route['404_override'] = '';
 // routes for `conversations` resource
 $route['conversations/(:int)'] = "conversations/index/$1";
 $route['conversation/(:any)'] = "conversation/index/$1";
+$route['users/(:int)'] = "users/index/$1";
 $route['welcome/test'] = "welcome/test";
 
 // CLI
