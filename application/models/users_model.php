@@ -28,7 +28,55 @@ class Users_model extends CI_Model {
     }
 
 	/**
-	* Get a specific user by its id
+	* Get a page of approved users.
+	*
+	* @pre		: `$page` must be a non-negatve int
+	* @pre		: `$n` must be a positive int
+	* @post		: an array of users will be returned (0 <= length <= $n)
+	*
+	* @param	: int	: page	: the page of approved users to retrieve
+	* @param	: int	: n		: the number of approved users to retrieve
+	* @return	: array : users
+	**/
+    public function get_approved_page($page=0, $n=25) {
+        // compute offset
+        $num_skips = $page * $n;
+
+        // fetch n users with num_skips
+		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
+        return array_map(array($this, "_format_user_object"),
+			$this->db
+				->get('users', $n, $num_skips)
+				->where('approved', true)
+				->result_array());
+    }
+
+	/**
+	* Get a page of unapproved users.
+	*
+	* @pre		: `$page` must be a non-negatve int
+	* @pre		: `$n` must be a positive int
+	* @post		: an array of users will be returned (0 <= length <= $n)
+	*
+	* @param	: int	: page	: the page of unapproved users to retrieve
+	* @param	: int	: n		: the number of unapproved users to retrieve
+	* @return	: array : users
+	**/
+    public function get_unapproved_page($page=0, $n=25) {
+        // compute offset
+        $num_skips = $page * $n;
+
+        // fetch n users with num_skips
+		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
+        return array_map(array($this, "_format_user_object"),
+			$this->db
+				->get('users', $n, $num_skips)
+				->where('approved', false)
+				->result_array());
+    }
+
+	/**
+	* Get a specific user by her id.
 	*
 	* @pre		: `$id` must be a valid user id
 	* @post		: a query will be made to the database to fetch users
