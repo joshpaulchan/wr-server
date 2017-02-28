@@ -47,32 +47,32 @@ class Auth extends CI_Controller {
 		$data = $this->users_model->get_user_by_email($email);
 
 		if (array_key_exists('error', $data)) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'message' => "Error logging user in."
-			], 500);
+			), 500);
 		}
 
 		// Check if approved
 		if ($data['approved'] === false) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'message' => 'You have not be approved to use Web-Response yet.'
-			], 401);
+			), 401);
 		}
 
 		// Check password
 		if (!$this->_passwords_match($pw, $data['password'])) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'message' => 'Password is incorrect.'
-			], 401);
+			), 401);
 		}
 		// remove pw
-		$data = array_diff_key($data, [ "password" => '']);
+		$data = array_diff_key($data, array("password" => ''));
 
 		// add user to session
-		$this->session->set_userdata(["user" => $data]);
+		$this->session->set_userdata(array("user" => $data));
 
 		$this->_send_json($data);
 	}
@@ -89,7 +89,6 @@ class Auth extends CI_Controller {
 	public function logout() {
 		// delete session
 		if ($this->_is_logged_in()) { $this->session->sess_destroy(); }
-
 		return null;
 	}
 
@@ -103,7 +102,7 @@ class Auth extends CI_Controller {
 	* session, false otherwise.
 	**/
 	public function loggedIn() {
-		$this->_send_json([ "loggedIn" => $this->_is_logged_in() ]);
+		$this->_send_json(array("loggedIn" => $this->_is_logged_in()));
 	}
 
 	/**
@@ -120,20 +119,20 @@ class Auth extends CI_Controller {
 
 		// check values exists
 		if (!$email || !$pw) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'Error registering the user.'
-			]);
+			));
 		}
 
 		// check email hasn't been used
 		$resp = $this->users_model->get_user_by_email($email);
 
 		if (!array_key_exists('error', $resp)) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'Error registering the user.'
-			], 500);
+			), 500);
 		}
 
 		// create new user
@@ -153,20 +152,20 @@ class Auth extends CI_Controller {
 	public function escalate($id) {
 		// check logged in
 		if (!$this->_is_logged_in()) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You are not logged in.'
-			], 401);
+			), 401);
 		}
 
 		$user = $this->session->all_userdata()['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You do not have the permissions to escalate users.'
-			], 403);
+			), 403);
 		}
 
 		// escalate user
@@ -185,20 +184,20 @@ class Auth extends CI_Controller {
 	public function deescalate($id) {
 		// check logged in
 		if (!$this->_is_logged_in()) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You are not logged in.'
-			], 401);
+			), 401);
 		}
 
 		$user = $this->session->all_userdata()['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You do not have the permissions to deescalate users.'
-			], 403);
+			), 403);
 		}
 
 		// escalate user
@@ -217,20 +216,20 @@ class Auth extends CI_Controller {
 	public function approve($id) {
 		// check logged in
 		if (!$this->_is_logged_in()) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You are not logged in.'
-			], 401);
+			), 401);
 		}
 
 		$user = $this->session->all_userdata()['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
-			return $this->_send_json([
+			return $this->_send_json(array(
 				'error' => true,
 				'errorMessage' => 'You do not have the permissions to approve users.'
-			], 403);
+			), 403);
 		}
 
 		// escalate user

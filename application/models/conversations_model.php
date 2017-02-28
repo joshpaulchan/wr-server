@@ -39,19 +39,19 @@ class Conversations_model extends CI_Model {
     public function get_conversation($id) {
 		// get conversation
 		$query = $this->db
-					->get_where('conversations', ['id' => $id], 1, 0);
+					->get_where('conversations', array('id' => $id), 1, 0);
 
 		if ($query->num_rows() === 0) {
 			// exit and return 404
-			return [
+			return array(
 				"error" => "Cannot find conversation the id:".$id
-			];
+			);
 		}
 		$conversation = (array)($query->row());
 
 		// get conversation messages
 		$messages = $this->db
-						->get_where('messages', ['conversation_id' => $id])
+						->get_where('messages', array('conversation_id' => $id))
 						->result_array();
 		$conversation['messages'] = $messages;
 
@@ -70,12 +70,12 @@ class Conversations_model extends CI_Model {
 	**/
 	public function create_reply($id, $sentTo, $sentBy, $body) {
 		// get conversation messages
-		$messages = $this->db->insert('messages', [
+		$messages = $this->db->insert('messages', array(
 			'emailFrom'			=> $sentBy,
 			'emailTo'			=> $sentTo,
 			'body'				=> $body,
 			'conversation_id'	=> $id
-		]);
+		));
 
 		return $conversation;
 	}
@@ -90,9 +90,7 @@ class Conversations_model extends CI_Model {
 	* @return	: null
 	**/
 	public function create($data) {
-		// FIXME: match to real inputs
-		$conversation = [
-			'id'			=> 'do i decide?',
+		$conversation = array(
 			'emailFrom'		=> $data['emailFrom'],
 			'subject'		=> $data['subject'],
 			'unread'		=> true,
@@ -103,22 +101,17 @@ class Conversations_model extends CI_Model {
 			'userAgent'		=> $data['userAgent'],
 			'browser'		=> $data['browser'],
 			'os'			=> $data['os'],
-			'createdAt'		=> 'now',
-			'lastUpdate'	=> 'now'
-		];
+		);
 
 		// insert conversation and message
 		$convo = $this->db->insert('conversations', $conversation);
 
-		$message = [
-			'id'				=> 'us?',
+		$message = array(
 			'emailFrom'			=> $data['emailFrom'],
 			'emailTo'			=> 'us or webstaff.rutgers.edu',
 			'body'				=> $data['body'],
-			'conversation_id'	=> $conversation['id'],
-			'createdAt'			=> 'now',
-			'lastUpdate'		=> 'now'
-		];
+			'conversation_id'	=> $conversation['id']
+		);
 
 		$this->db->insert('messages', $message);
 		return;
@@ -131,9 +124,5 @@ class Conversations_model extends CI_Model {
     **/
     public function count() {
         return $this->db->count_all('conversations');
-    }
-
-    public function _seed() {
-
     }
 }
