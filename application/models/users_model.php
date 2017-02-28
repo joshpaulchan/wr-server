@@ -42,13 +42,11 @@ class Users_model extends CI_Model {
     public function get_user_by_id($id, $raw=false) {
 		// get user
 		$query = $this->db
-					->get_where('users', ['id' => $id], 1, 0);
+					->get_where('users', array('id' => $id), 1, 0);
 
 		if ($query->num_rows() === 0) {
 			// exit and return 404
-			return [
-				"error" => "Cannot find user with id:".$id
-			];
+			return array("error" => "Cannot find user with id: ".$id);
 		}
 		$user = (array)($query->row());
 
@@ -74,13 +72,11 @@ class Users_model extends CI_Model {
     public function get_user_by_email($email, $raw=false) {
 		// get user
 		$query = $this->db
-					->get_where('users', ['email' => $email], 1, 0);
+					->get_where('users', array('email' => $email), 1, 0);
 
 		if ($query->num_rows() === 0) {
 			// exit and return 404
-			return [
-				"error" => "cannot find user with email:".$email
-			];
+			return array("error" => "cannot find user with email: ".$email);
 		}
 		$user = (array)($query->row());
 
@@ -102,10 +98,10 @@ class Users_model extends CI_Model {
 	* @return	: null
 	**/
 	public function create($email, $password) {
-		$user = [
+		$user = array(
 			'email'		=> $email,
 			'password'	=> $password
-		];
+		);
 
 		// insert user and message
 		$u = $this->db->insert('users', $user);
@@ -122,7 +118,7 @@ class Users_model extends CI_Model {
 	* @return	: null
 	**/
 	public function remove($id) {
-		$this->db->delete('users', [ 'id' => $id ]);
+		$this->db->delete('users', array('id' => $id));
 		return;
 	}
 
@@ -137,7 +133,7 @@ class Users_model extends CI_Model {
 	**/
 	public function approve($id) {
 		// update user `approved` =  true  if they have the given id
-		$this->db->update('users', [ 'approved' => true ], [ 'id' => $id ]);
+		$this->db->update('users', array('approved' => true), array('id' => $id));
 		return;
 	}
 
@@ -152,7 +148,7 @@ class Users_model extends CI_Model {
 	**/
 	public function set_admin($id, $status) {
 		// update user `admin` attribute
-		$this->db->update('users', [ 'admin' => (bool)$status ], [ 'id' => $id ]);
+		$this->db->update('users', array('admin' => (bool)$status), array('id' => $id));
 		return;
 	}
 
@@ -166,7 +162,7 @@ class Users_model extends CI_Model {
 	* @return	: array 	: the formatted user object
 	**/
 	private function _format_user_object($user) {
-		return [
+		return array(
 			"id" => (int)$user["id"],
 			"email" => $user["email"],
 			"admin" => (bool)$user["admin"],
@@ -174,7 +170,7 @@ class Users_model extends CI_Model {
 			"approved" => (bool)$user["approved"],
 			"createdAt" => $user["createdAt"],
 			"lastUpdated" => $user["lastUpdated"]
-		];
+		);
 	}
 
 	/**
