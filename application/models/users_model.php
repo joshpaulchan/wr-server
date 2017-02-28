@@ -21,9 +21,10 @@ class Users_model extends CI_Model {
         $num_skips = $page * $n;
 
         // fetch n users with num_skips
-        return $this->db
+		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
+        return array_map(array($this, "_format_user_object"), $this->db
 					->get('users', $n, $num_skips)
-					->result_array();
+					->result_array());
     }
 
 	/**
@@ -175,5 +176,14 @@ class Users_model extends CI_Model {
 			"lastUpdated" => $user["lastUpdated"]
 		];
 	}
+
+	/**
+    * Counts the number of records in the database table.
+    *
+    * @return   : int   : the number of conversation records in the database.
+    **/
+    public function count() {
+        return $this->db->count_all('users');
+    }
 
 }
