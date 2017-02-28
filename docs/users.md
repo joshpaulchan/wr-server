@@ -217,23 +217,16 @@ Admins can remove users as they please, users can only remove a user if it is hi
 </thead>
 <tbody>
     <tr>
-        <th>GET `/users`</td>
-        <td>get a list of users registered with web response</td>
-        <td>
-            retrieves a list of users with meta-information
-        </td>
-    </tr>
-    <tr>
-        <th>GET `/users/`</td>
-        <td>get a list of users registered with web response</td>
+        <th>GET `/users?page={page}&n={}&approval={}`</td>
+        <td>get a list of users registered with web response, filtered by approval satus</td>
         <td>
             **query params**
             <ul>
                 <li>**page** *[optional] [default 0]* - the page of conversations to retrieve</li>
                 <li>**n** *[optional] [default 25]* - the number of items to return per page</li>
-                <li>**q** *[optional]* - the string to search for in the conversations</li>
+                <li>**approval** *[default true]* - the approval status to filter for</li>
             </ul>
-            retrieves a list of conversations with meta-information
+            retrieves a list of users, by default returns a paginated list of approved users.
         </td>
     </tr>
     <tr>
