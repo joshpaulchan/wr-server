@@ -69,7 +69,7 @@ class Auth extends CI_Controller {
 			], 401);
 		}
 		// remove pw
-		unset($data["password"]);
+		$data = array_diff_key($data, [ "password" => '']);
 
 		// add user to session
 		$this->session->set_userdata(["user" => $data]);
