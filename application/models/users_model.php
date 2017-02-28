@@ -28,17 +28,19 @@ class Users_model extends CI_Model {
     }
 
 	/**
-	* Get a page of approved users.
+	* Get a page of users with specific approval.
 	*
 	* @pre		: `$page` must be a non-negatve int
+	* @pre		: `$approval` must be a boolean
 	* @pre		: `$n` must be a positive int
 	* @post		: an array of users will be returned (0 <= length <= $n)
 	*
-	* @param	: int	: page	: the page of approved users to retrieve
-	* @param	: int	: n		: the number of approved users to retrieve
-	* @return	: array : users
+	* @param	: bool	: approval	: the type of approval status to filter for
+	* @param	: int	: page		: the page of users to retrieve
+	* @param	: int	: n			: the number of users to retrieve
+	* @return	: array : array of user objects
 	**/
-    public function get_approved_page($page=0, $n=25) {
+    public function get_page_with_approval($approval=true, $page=0, $n=25) {
         // compute offset
         $num_skips = $page * $n;
 
@@ -46,32 +48,7 @@ class Users_model extends CI_Model {
 		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
         return array_map(array($this, "_format_user_object"),
 			$this->db
-				->get('users', $n, $num_skips)
-				->where('approved', true)
-				->result_array());
-    }
-
-	/**
-	* Get a page of unapproved users.
-	*
-	* @pre		: `$page` must be a non-negatve int
-	* @pre		: `$n` must be a positive int
-	* @post		: an array of users will be returned (0 <= length <= $n)
-	*
-	* @param	: int	: page	: the page of unapproved users to retrieve
-	* @param	: int	: n		: the number of unapproved users to retrieve
-	* @return	: array : users
-	**/
-    public function get_unapproved_page($page=0, $n=25) {
-        // compute offset
-        $num_skips = $page * $n;
-
-        // fetch n users with num_skips
-		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
-        return array_map(array($this, "_format_user_object"),
-			$this->db
-				->get('users', $n, $num_skips)
-				->where('approved', false)
+				->get_where('users', array('approved' => (bool)$approval), $n, $num_skips)
 				->result_array());
     }
 
@@ -222,12 +199,15 @@ class Users_model extends CI_Model {
 	}
 
 	/**
-    * Counts the number of records in the database table.
+    * Counts the number of records in the database table with the given approval attribute.
     *
+	* @param	: bool	: approval	: the approval status to filter for
     * @return   : int   : the number of conversation records in the database.
     **/
-    public function count() {
-        return $this->db->count_all('users');
+    public function count($approval=true) {
+        return $this->db
+			->where('approved', (bool)$approval)
+			->count_all_results('users');
     }
 
 }
