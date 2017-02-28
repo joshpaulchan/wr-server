@@ -30,7 +30,12 @@ class Conversations extends CI_Controller {
 	* @param	: string	: q		: the number of items to return per page
 	* @return	: array 	: object with conversation results
 	**/
-	public function index($page=0, $n=25, $q='') {
+	public function index() {
+		// access vars
+		$page = (int)$this->input->get('page', 0);
+		$n = (int)$this->input->get('n', 25);
+		$q = $this->input->get('q', '');
+
 		// figure out skips
 		$num_convos = $this->conversations_model->count();
 		$total_num_pages = ceil($num_convos / $n);
