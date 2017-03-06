@@ -35,8 +35,8 @@ class Users extends CI_Controller {
 		// access vars
 		$approv_str = $this->input->get('approval', '');
 		$approval = ($approv_str === 'true');
-		$page = (int)$this->input->get('page', 0);
-		$n = (int)$this->input->get('n', 25);
+		$page = ((int)$this->input->get('page') >= 0) ? (int)($this->input->get('page')) : 0;
+		$n = ((int)$this->input->get('n') > 0) ? (int)($this->input->get('n')) : 25;
 
 		// figure out skips
 		$num_convos = $this->users_model->count($approval);
