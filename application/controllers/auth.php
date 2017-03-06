@@ -40,8 +40,9 @@ class Auth extends CI_Controller {
 	**/
 	public function login() {
 		// Access variables
-		$email = $this->input->post('email');
-		$pw = $this->input->post('password');
+		$json_data = json_decode(file_get_contents('php://input'), TRUE);
+		$email = $json_data['email'];
+		$pw = $json_data['password'];
 
 		// Get user by email
 		$data = $this->users_model->get_user_by_email($email);
@@ -113,9 +114,10 @@ class Auth extends CI_Controller {
 	* @return	: null if successful, error object o.w.
 	**/
 	public function register() {
-		// validate form
-		$email = $this->input->post('email');
-		$pw = $this->input->post('password');
+		// access data values
+		$json_data = json_decode(file_get_contents('php://input'), TRUE);
+		$email = $json_data['email'];
+		$pw = $json_data['password'];
 
 		// check values exists
 		if (!$email || !$pw) {
