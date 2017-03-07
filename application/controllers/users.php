@@ -33,8 +33,10 @@ class Users extends CI_Controller {
 	**/
 	public function index() {
 		// access vars
-		$approv_str = $this->input->get('approval', '');
+		$has_approv = ($this->input->get('approval') != NULL);
+		$approv_str = ($has_approv === true) ? $this->input->get('approval') : false;
 		$approval = ($approv_str === 'true');
+
 		$page = ((int)$this->input->get('page') >= 0) ? (int)($this->input->get('page')) : 0;
 		$n = ((int)$this->input->get('n') > 0) ? (int)($this->input->get('n')) : 25;
 
@@ -43,7 +45,11 @@ class Users extends CI_Controller {
 		$total_num_pages = ceil($num_convos / $n);
 
 		// fetch users
-		$users = $this->users_model->get_page_with_approval($approval, $page, $n);
+		if ($has_approv === true) {
+			$users = $this->users_model->get_page_with_approval($approval, $page, $n);
+		} else {
+			$users = $this->users_model->get_page($page, $n);
+		}
 		$users = array_map(array($this, '_strip_pw'), $users);
 
 		// create next page link
