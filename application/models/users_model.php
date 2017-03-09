@@ -134,7 +134,7 @@ class Users_model extends CI_Model {
 	}
 
 	/**
-	* TODO: Remove a user.
+	* Remove a user.
 	*
 	* @pre		: the given `$id` should refer to an existing user record
 	* @post		: [success] the given user object will be removed
@@ -178,6 +178,18 @@ class Users_model extends CI_Model {
 	}
 
 	/**
+    * Counts the number of records in the database table with the given approval attribute.
+    *
+	* @param	: bool	: approval	: the approval status to filter for
+    * @return   : int   : the number of conversation records in the database.
+    **/
+    public function count($approval=true) {
+        return $this->db
+			->where('approved', (bool)$approval)
+			->count_all_results('users');
+    }
+
+	/**
 	* Format the user object for retrieval.
 	*
 	* @pre		: the given `$user` should be an associative array
@@ -196,17 +208,5 @@ class Users_model extends CI_Model {
 			)
 		);
 	}
-
-	/**
-    * Counts the number of records in the database table with the given approval attribute.
-    *
-	* @param	: bool	: approval	: the approval status to filter for
-    * @return   : int   : the number of conversation records in the database.
-    **/
-    public function count($approval=true) {
-        return $this->db
-			->where('approved', (bool)$approval)
-			->count_all_results('users');
-    }
 
 }
