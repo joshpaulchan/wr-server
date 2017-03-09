@@ -25,9 +25,9 @@ class Conversations extends MY_Controller {
 	**/
 	public function index() {
 		// access vars
-		$page = (int)$this->input->get('page', 0);
-		$n = (int)$this->input->get('n', 25);
-		$q = $this->input->get('q', '');
+		$page = ($this->input->get('page') != NULL) ? (int)$this->input->get('page') : 0;
+		$n = ($this->input->get('n') != NULL) ? (int)$this->input->get('n') : 25;
+		$q = ($this->input->get('q') != NULL) ? (int)$this->input->get('q') : null;
 
 		// figure out skips
 		$num_convos = $this->conversations_model->count();
