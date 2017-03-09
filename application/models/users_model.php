@@ -187,14 +187,13 @@ class Users_model extends CI_Model {
 	* @return	: array 	: the formatted user object
 	**/
 	private function _format_user_object($user) {
-		return array(
-			"id" => (int)$user["id"],
-			"email" => $user["email"],
-			"admin" => (bool)$user["admin"],
-			"password" => $user["password"],
-			"approved" => (bool)$user["approved"],
-			"createdAt" => $user["createdAt"],
-			"lastUpdated" => $user["lastUpdated"]
+		return array_merge(
+			$user,
+			array(
+				"id" => (int)$user["id"],
+				"admin" => (bool)$user["admin"],
+				"approved" => (bool)$user["approved"]
+			)
 		);
 	}
 

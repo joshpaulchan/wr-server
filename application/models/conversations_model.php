@@ -21,9 +21,9 @@ class Conversations_model extends CI_Model {
         $num_skips = $page * $n;
 
         // fetch n conversations with num_skips
-        return $this->db
+        return array_map(array($this, "_format_conversation_object"), $this->db
 					->get('conversations', $n, $num_skips)
-					->result_array();
+					->result_array());
     }
 
 	/**
@@ -55,7 +55,7 @@ class Conversations_model extends CI_Model {
 						->result_array();
 		$conversation['messages'] = $messages;
 
-		return $conversation;
+		return $this->_format_conversation_object($conversation);
     }
 
 	/**
@@ -77,7 +77,7 @@ class Conversations_model extends CI_Model {
 			'conversation_id'	=> $id
 		));
 
-		return $conversation;
+		return $this->_format_conversation_object($conversation);
 	}
 
 	/**
@@ -115,6 +115,27 @@ class Conversations_model extends CI_Model {
 
 		$this->db->insert('messages', $message);
 		return;
+	}
+
+	/**
+	* Format the given conversation object for more accurate data types.
+	*
+	* @pre		: the given `$c` should be an associative array
+	* @post		: the given `$c` will not be modified.
+	* @post		: a transformed copy of the given `$c` will be returned.
+	*
+	* @param	: array 	: c	: the conversation object to format
+	* @return	: array 	: the formatted conversation object
+	**/
+	private function _format_conversation_object($c) {
+		return array_merge(
+			$c,
+			array(
+				"id" => (int)$c["id"],
+				"unread" => (bool)$c["unread"],
+				"unreplied" => (bool)$c["unreplied"],
+			)
+		);
 	}
 
     /**
