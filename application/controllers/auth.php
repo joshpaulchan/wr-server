@@ -19,9 +19,6 @@ class Auth extends MY_Controller {
 
 		// initialize password hasher
 		$this->pwHasher = new PasswordHash(8, false);
-
-		// initialize sessions
-		$this->load->library('session');
 	}
 
 	/**
@@ -244,16 +241,6 @@ class Auth extends MY_Controller {
 	**/
 	private function _passwords_match($pwa, $pwb) {
 		return $this->pwHasher->CheckPassword($pwa, $pwb);
-	}
-
-	/**
-	* Checks the session data to see if user is logged in.
-	*
-	* @return	: bool	: true if user is logged in, false o.w.
-	**/
-	private function _is_logged_in() {
-		$sess_data = $this->session->all_userdata();
-		return array_key_exists("user", $sess_data);
 	}
 }
 

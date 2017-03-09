@@ -11,6 +11,9 @@ class MY_Controller extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 
+		// initialize sessions
+		$this->load->library('session');
+
 		// prevent caching
 		$this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -28,6 +31,38 @@ class MY_Controller extends CI_Controller {
 			->set_status_header($code)
 			->set_content_type('application/json')
 			->set_output(json_encode($data));
+	}
+
+	/**
+	* Checks the session data to see if user is logged in.
+	*
+	* @return	: bool	: true if user is logged in, false o.w.
+	**/
+	public function _is_logged_in() {
+		$sess_data = $this->session->all_userdata();
+		return array_key_exists("user", $sess_data);
+	}
+
+	/**
+	* Checks the session data to see if user is logged in and is an admin.
+	*
+	* @return	: bool	: true if user is logged in and admin, false o.w.
+	**/
+	public function _is_admin() {
+		$sess_data = $this->session->all_userdata();
+		return array_key_exists("user", $sess_data) && $sess_data['user']['admin'] === true;
+	}
+
+	/**
+	* Checks the session data to see if user is logged in and is an admin.
+	*
+	* @return	: array	: user object if logged in, empty object otherwise
+	**/
+	public function get_user() {
+		if ($this->_is_logged_in()) {
+			return $this->session->all_userdata()['user'];
+		}
+		return array();
 	}
 }
 
