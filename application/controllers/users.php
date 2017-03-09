@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Users extends CI_Controller {
+class Users extends MY_Controller {
 
 	/**
 	* Initialize the database classes and class attributes.
@@ -13,12 +13,6 @@ class Users extends CI_Controller {
 
 		// load db model
 		$this->load->model('users_model');
-
-		// prevent caching
-		$this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
-		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-		$this->output->set_header('Pragma: no-cache');
-		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	}
 
 	/**
@@ -85,17 +79,6 @@ class Users extends CI_Controller {
 	**/
 	private function _strip_pw($user) {
 		return array_diff_key($user, array("password" => ''));
-	}
-
-	private function _send_json($data) {
-		// log vars
-		// echo var_dump($data);
-		// return;
-
-		// format response
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($data));
 	}
 }
 
