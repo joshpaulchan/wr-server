@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "87aaee758819d54aaec6041d62d5e911",
+    "content-hash": "b224396c9a8f517bdbae17d8ec9d1c2c",
     "packages": [
         {
             "name": "fzaninotto/faker",
@@ -144,6 +144,42 @@
                 "psr-3"
             ],
             "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "simple-validator/simple-validator",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cangelis/simple-validator.git",
+                "reference": "469711d7bcd577220cc943d03d4966f6995750e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cangelis/simple-validator/zipball/469711d7bcd577220cc943d03d4966f6995750e2",
+                "reference": "469711d7bcd577220cc943d03d4966f6995750e2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SimpleValidator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Can Geliş",
+                    "email": "geliscan@gmail.com"
+                }
+            ],
+            "description": "Yet another validation class for PHP",
+            "time": "2017-01-23T11:02:27+00:00"
         },
         {
             "name": "symfony/console",
