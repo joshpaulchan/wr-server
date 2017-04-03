@@ -66,16 +66,6 @@ class Conversation extends MY_Controller {
 		$body = $json_data['body'];
 		$convo = $this->conversations_model->get_conversation($id);
 
-		// set email config
-		$config = [
-			'userAgent'	=> $ip = $this->input->ip_address(),
-			'mailtype'	=> 'html',
-			'crlf'		=> '\r\n',
-			'newline'	=> '\r\n'
-		];
-		// $this->email->initialize($config);
-
-		// configure email
 		$our = array(
 			'email'	=> $this->config->item('webresponse_email'),
 			'name'	=> 'Rutgers UCM Web Staff'
