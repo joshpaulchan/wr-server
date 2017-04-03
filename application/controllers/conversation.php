@@ -46,7 +46,7 @@ class Conversation extends MY_Controller {
 	* @param	: string	: body	: the body of the reply message
 	* @return	: array 	: object with conversation and its messages if it exists
 	**/
-	public function create($id) {
+	public function reply($id) {
 		$json_data = json_decode(file_get_contents('php://input'), TRUE);
 
 		// validate form
