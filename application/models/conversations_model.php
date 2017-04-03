@@ -57,7 +57,7 @@ class Conversations_model extends CI_Model {
 		$messages = $this->db
 						->get_where('messages', array('conversation_id' => $id))
 						->result_array();
-		$conversation['messages'] = $messages;
+		$conversation['messages'] = array_map(array($this, "_format_message_object"), $messages);
 
 		return $this->_format_conversation_object($conversation);
     }
@@ -74,14 +74,21 @@ class Conversations_model extends CI_Model {
 	**/
 	public function create_reply($id, $sentTo, $sentBy, $body) {
 		// get conversation messages
-		$messages = $this->db->insert('messages', array(
+		$message = array(
 			'emailFrom'			=> $sentBy,
 			'emailTo'			=> $sentTo,
 			'body'				=> $body,
 			'conversation_id'	=> $id
-		));
+		);
 
-		return $this->_format_conversation_object($conversation);
+		if ($this->db->insert('messages', $message)) {
+			return $this->get_conversation($convo_id);
+		} else {
+			return array(
+				"error" => true,
+				"message" => "Error saving reply to the database."
+			);
+		}
 	}
 
 	/**
@@ -147,6 +154,26 @@ class Conversations_model extends CI_Model {
 				"id" => (int)$c["id"],
 				"unread" => (bool)$c["unread"],
 				"unreplied" => (bool)$c["unreplied"],
+			)
+		);
+	}
+
+	/**
+	* Format the given message object for more accurate data types.
+	*
+	* @pre		: the given `$m` should be an associative array
+	* @post		: the given `$m` will not be modified.
+	* @post		: a transformed copy of the given `$m` will be returned.
+	*
+	* @param	: array 	: m	: the message object to format
+	* @return	: array 	: the formatted message object
+	**/
+	private function _format_message_object($m) {
+		return array_merge(
+			$m,
+			array(
+				"id" => (int)$m["id"],
+				"conversation_id" => (int)$m["conversation_id"],
 			)
 		);
 	}
