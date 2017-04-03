@@ -68,7 +68,7 @@ class Conversation extends MY_Controller {
 
 		$our = array(
 			'email'	=> $this->config->item('webresponse_email'),
-			'name'	=> 'Rutgers UCM Web Staff'
+			'name'	=> $this->config->item('webresponse_name')
 		);
 
 		// TODO: import a template for the body
