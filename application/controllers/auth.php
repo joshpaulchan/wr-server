@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 use Hautelook\Phpass\PasswordHash;
-require_once __DIR__.'/../third_party/autoload.php';
 
 class Auth extends MY_Controller {
 
