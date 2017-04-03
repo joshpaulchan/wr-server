@@ -41,9 +41,8 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
-// routes for `conversations` resource
-$route['conversations/(:int)'] = "conversations/index/$1";
-$route['conversation/(:any)'] = "conversation/index/$1";
+// routes for `conversation` resource
+$route['conversation/(:num)'] = "conversation/index/$1";
 
 $route['welcome/test'] = "welcome/test";
 
