@@ -3,6 +3,9 @@ class Conversations_model extends CI_Model {
 
 	public function __construct() {
 		$this->load->database();
+
+		// load config
+		$this->config->load('wr_config');
 	}
 
 	/**
@@ -22,6 +25,7 @@ class Conversations_model extends CI_Model {
 
         // fetch n conversations with num_skips
         return array_map(array($this, "_format_conversation_object"), $this->db
+					->order_by('createdAt', 'desc')
 					->get('conversations', $n, $num_skips)
 					->result_array());
     }
@@ -81,40 +85,49 @@ class Conversations_model extends CI_Model {
 	}
 
 	/**
-	* TODO: Create a new conversation  and message.
+	* Create a new conversation  and message.
 	*
-	* @pre		:
-	* @post		:
+	* @post		: creates a new conversation record and initial message record, and links the two
 	*
-	* @param	:
+	* @param	: str	: $sentBy	: the email of the person who started the conversation
+	* @param	: str	: $subject	: the subject of the conversation
+	* @param	: str	: $body		: the message body
+	* @param	: str	: $data		: the technical info of the conversation
 	* @return	: null
 	**/
-	public function create($data) {
+	public function create($sentBy, $subject, $body, $data) {
 		$conversation = array(
-			'emailFrom'		=> $data['emailFrom'],
-			'subject'		=> $data['subject'],
+			'emailFrom'		=> $sentBy,
+			'subject'		=> $subject,
 			'unread'		=> true,
 			'unreplied'		=> true,
 			'location'		=> 'inbox',
-			'ip'			=> $data['ip'],
-			'referrer'		=> $data['referrer'],
 			'userAgent'		=> $data['userAgent'],
 			'browser'		=> $data['browser'],
 			'os'			=> $data['os'],
+			'ip'			=> $data['ip'],
+			'referrer'		=> $data['referrer'],
 		);
 
 		// insert conversation and message
 		$convo = $this->db->insert('conversations', $conversation);
+		$convo_id = $this->db->insert_id();
 
 		$message = array(
-			'emailFrom'			=> $data['emailFrom'],
-			'emailTo'			=> 'us or webstaff.rutgers.edu',
-			'body'				=> $data['body'],
-			'conversation_id'	=> $conversation['id']
+			'emailFrom'			=> $sentBy,
+			'emailTo'			=> $this->config->item('webresponse_email'),
+			'body'				=> $body,
+			'conversation_id'	=> $convo_id
 		);
 
-		$this->db->insert('messages', $message);
-		return;
+		if ($this->db->insert('messages', $message)) {
+			return $this->get_conversation($convo_id);
+		} else {
+			return array(
+				"error" => true,
+				"message" => "Error saving conversation to the database."
+			);
+		}
 	}
 
 	/**
