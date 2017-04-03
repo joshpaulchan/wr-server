@@ -82,7 +82,7 @@ class Conversations_model extends CI_Model {
 		);
 
 		if ($this->db->insert('messages', $message)) {
-			return $this->get_conversation($convo_id);
+			return $this->get_conversation($id);
 		} else {
 			return array(
 				"error" => true,
