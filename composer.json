@@ -3,7 +3,8 @@
         "fzaninotto/faker": "^1.6",
         "ua-parser/uap-php": "^3.4",
         "hautelook/phpass": "^1.1",
-        "simple-validator/simple-validator": "^1.0"
+        "simple-validator/simple-validator": "^1.0",
+        "vlucas/phpdotenv": "^2.4"
     },
     "config" : {
         "vendor-dir" : "application/third_party"
