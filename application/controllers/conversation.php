@@ -79,7 +79,7 @@ class Conversation extends MY_Controller {
 		$this->email->to($convo['emailFrom']);
 		$this->email->subject('['.$convo['id'].'] - '.$convo['subject']);
 		$this->email->message($full_body);
-		// $this->email->send();
+		$this->email->send();
 
 		// create record
 		return $this->_send_json($this->conversations_model->create_reply(
