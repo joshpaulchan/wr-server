@@ -1,6 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
+| -------------------------------------------------------------------
+|  Auto-load Environment variables
+| -------------------------------------------------------------------
+|
+*/
+require_once APPPATH.'third_party/autoload.php';
+$dotenv = new Dotenv\Dotenv(__DIR__, '../../.env');
+$dotenv->load();
+
+/*
 |--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------

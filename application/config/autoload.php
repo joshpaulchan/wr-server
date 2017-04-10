@@ -38,8 +38,6 @@
 */
 
 $autoload['packages'] = array();
-require_once APPPATH.'third_party/autoload.php';
-
 
 /*
 | -------------------------------------------------------------------
