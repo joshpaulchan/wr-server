@@ -85,5 +85,4 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/codeigniter,phpstorm
 *.env
-.htaccess
 third_party/
