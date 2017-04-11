@@ -95,9 +95,8 @@ class Conversation extends MY_Controller {
 				"error" => true,
 				"message" => "There was an error sending your message."
 			);
-		} finally {
-			return $this->_send_json($resp);
 		}
+		return $this->_send_json($resp);
 	}
 
 	public function update() {
