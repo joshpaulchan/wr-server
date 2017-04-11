@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-use SimpleValidator\Validator;
+// use SimpleValidator\Validator;
 
 class Conversation extends MY_Controller {
 
@@ -18,6 +18,9 @@ class Conversation extends MY_Controller {
 
 		// load email lib
 		$this->load->library('email');
+
+		// load form validation lib
+		$this->load->library('form_validation');
 
 		// load config
 		$this->config->load('wr_config');
@@ -47,19 +50,17 @@ class Conversation extends MY_Controller {
 	* @return	: array 	: object with conversation and its messages if it exists
 	**/
 	public function reply($id) {
-		$json_data = json_decode(file_get_contents('php://input'), TRUE);
+		$json_data = $this->get_json();
 
 		// validate form
-		$rules = array(
-			// body: 4-256 characters long, and plain text
-			"body" => array("required", "max_length(256)", "min_length(4)"),
-		);
-		$result = Validator::validate($json_data, $rules);
+		// body: 4-256 characters long, and plain text
+		$this->form_validation->set_rules('body', 'body', 'trim|required|min_length[4]|max_length[256]');
+		$result = $this->form_validation->run();
 
-		if ($result->isSuccess() == false) {
+		if ($result == false) {
 			return $this->_send_json(array(
 				"error" => true,
-				"message" => $result->getErrors()
+				"message" => validation_errors()
 			));
 		}
 
@@ -79,15 +80,24 @@ class Conversation extends MY_Controller {
 		$this->email->to($convo['emailFrom']);
 		$this->email->subject('['.$convo['id'].'] - '.$convo['subject']);
 		$this->email->message($full_body);
-		$this->email->send();
 
-		// create record
-		return $this->_send_json($this->conversations_model->create_reply(
-			$id,
-			$convo['emailFrom'],
-			$our['email'],
-			$full_body
-		));
+		try {
+			$this->email->send();
+			// create record
+			$resp = $this->conversations_model->create_reply(
+				$id,
+				$convo['emailFrom'],
+				$our['email'],
+				$full_body
+			);
+		} catch (Exception $e) {
+			$resp = array(
+				"error" => true,
+				"message" => "There was an error sending your message."
+			);
+		} finally {
+			return $this->_send_json($resp);
+		}
 	}
 
 	public function update() {
