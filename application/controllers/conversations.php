@@ -80,29 +80,26 @@ class Conversations extends MY_Controller {
 	* @return	: array 	: newly created conversation object w/ message or error object
 	**/
 	public function create() {
-		$json_data = json_decode(file_get_contents('php://input'), TRUE);
-
-		// seed POST data
-		function insert_to_post($k, $v) { $_POST[$k] = $v; };
-		array_map("insert_to_post", $json_data);
+		$json_data = $this->get_json();
 
 		// validate form
 		$valid = true;
 		// email: 4-128 characters long, and a valid email
-		$this->form_validation->set_rules('email', 'email', 'trim|required|min_length[4]|max_length[128]|valid_email');
+		$this->form_validation->set_rules('emailfrom', 'emailfrom', 'trim|required|min_length[4]|max_length[128]|valid_email');
 		// subject: 4-256 characters long, and plain text
 		$this->form_validation->set_rules('subject', 'subject', 'trim|required|min_length[4]|max_length[256]');
 		// body: 4-256 characters long, and plain text
 		$this->form_validation->set_rules('body', 'body', 'trim|required|min_length[4]|max_length[256]');
 		// referrer: must be a valid url
 		$this->form_validation->set_rules('referrer', 'referrer', 'trim|required');
+
 		$valid = $this->form_validation->run();
 
 		if ($valid == false) {
 			// return errors
 			$resp = array(
 				"error" => true,
-				"message" => "There was an error submitting your message."
+				"message" => validation_errors()
 			);
 		} else {
 			// else create new conversation
