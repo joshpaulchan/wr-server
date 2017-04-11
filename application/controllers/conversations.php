@@ -1,8 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-use UAParser\Parser;
-use SimpleValidator\Validator;
-
 class Conversations extends MY_Controller {
 
 	/**
@@ -14,6 +11,12 @@ class Conversations extends MY_Controller {
 
 		// load db model
 		$this->load->model('conversations_model');
+
+		// load user agent lib
+		$this->load->library('user_agent');
+
+		// load form lib
+		$this->load->library('form_validation');
 	}
 
 	/**
@@ -52,15 +55,15 @@ class Conversations extends MY_Controller {
 			$prev_str = "/conversations?page=".($page - 1)."&n=".$n;
 		}
 
-		$data = [
+		$data = array(
 			"per_page"		=> $n,
 			"current_page"	=> $page,
 			"next_page_url" => $next_str,
 			"prev_page_url" => $prev_str,
 			"data" 			=> $conversations
-		];
+		);
 
-		$this->_send_json($data);
+		return $this->_send_json($data);
 	}
 
 	/**
@@ -79,24 +82,27 @@ class Conversations extends MY_Controller {
 	public function create() {
 		$json_data = json_decode(file_get_contents('php://input'), TRUE);
 
-		// validate form
-		$rules = array(
-			// email: 4-128 characters long, and a valid email
-			"emailfrom" => array("required", "email", "max_length(128)", "min_length(4)"),
-			// subject: 4-256 characters long, and plain text
-			"subject" => array("required", "alpha_numeric", "max_length(256)", "min_length(4)"),
-			// body: 4-256 characters long, and plain text
-			"body" => array("required", "max_length(256)", "min_length(4)"),
-			// referrer: must be a valid url
-			"referrer" => array("required", "url")
-		);
-		$result = Validator::validate($json_data, $rules);
+		// seed POST data
+		function insert_to_post($k, $v) { $_POST[$k] = $v; };
+		array_map("insert_to_post", $json_data);
 
-		if ($result->isSuccess() == false) {
+		// validate form
+		$valid = true;
+		// email: 4-128 characters long, and a valid email
+		$this->form_validation->set_rules('email', 'email', 'trim|required|min_length[4]|max_length[128]|valid_email');
+		// subject: 4-256 characters long, and plain text
+		$this->form_validation->set_rules('subject', 'subject', 'trim|required|min_length[4]|max_length[256]');
+		// body: 4-256 characters long, and plain text
+		$this->form_validation->set_rules('body', 'body', 'trim|required|min_length[4]|max_length[256]');
+		// referrer: must be a valid url
+		$this->form_validation->set_rules('referrer', 'referrer', 'trim|required');
+		$valid = $this->form_validation->run();
+
+		if ($valid == false) {
 			// return errors
 			$resp = array(
 				"error" => true,
-				"message" => $result->getErrors()
+				"message" => "There was an error submitting your message."
 			);
 		} else {
 			// else create new conversation
@@ -110,12 +116,10 @@ class Conversations extends MY_Controller {
 			$useragent = $this->input->user_agent();
 
 			// parse useragent into browser, os
-			$parser = Parser::create();
-			$parsed_ua =$parser->parse($useragent);
 			$data = array(
 				"userAgent"	=> $useragent,
-				"os"		=> $parsed_ua->os->toString(),
-				"browser"	=> $parsed_ua->ua->tostring(),
+				"os"		=> $this->agent->platform(),
+				"browser"	=> $this->agent->browser(),
 				"ip"		=> $ip,
 				"referrer"	=> $referrer,
 			);
@@ -123,10 +127,6 @@ class Conversations extends MY_Controller {
 		}
 
 		return $this->_send_json($resp);
-	}
-
-	public function update() {
-
 	}
 }
 
