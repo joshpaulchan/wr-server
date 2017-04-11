@@ -21,6 +21,18 @@ class MY_Controller extends CI_Controller {
 		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	}
 
+	// Retrieves and formats the JSON from POST requests, if any. Also seeds the POST data with it.
+	//
+	public function get_json() {
+		$json = json_decode(file_get_contents('php://input'), TRUE);
+
+		// seed POST data
+		function insert_to_post($k, $v) { $_POST[$k] = $v; };
+		array_map("insert_to_post", array_keys($json), $json);
+
+		return $json;
+	}
+
 	public function _send_json($data, $code=200) {
 		// log vars
 		// echo var_dump($data);
