@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    'SimpleValidator\\' => array($vendorDir . '/simple-validator/simple-validator/src'),
     'Hautelook' => array($vendorDir . '/hautelook/phpass/src'),
 );
