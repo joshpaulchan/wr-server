@@ -60,7 +60,8 @@ class MY_Controller extends CI_Controller {
 	**/
 	public function get_user() {
 		if ($this->_is_logged_in()) {
-			return $this->session->all_userdata()['user'];
+			$sess_data = $this->session->all_userdata();
+			return $sess_data['user'];
 		}
 		return array();
 	}
