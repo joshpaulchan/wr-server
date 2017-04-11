@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-use Hautelook\Phpass\PasswordHash;
+// use Hautelook\Phpass\PasswordHash;
+require_once APPPATH.'third_party/hautelook/phpass/src/Hautelook/Phpass/PasswordHash.php';
 
 class Auth extends MY_Controller {
 
@@ -151,7 +152,8 @@ class Auth extends MY_Controller {
 			), 401);
 		}
 
-		$user = $this->session->all_userdata()['user'];
+		$user_data = $this->session->all_userdata();
+		$user = $user_data['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
@@ -183,7 +185,8 @@ class Auth extends MY_Controller {
 			), 401);
 		}
 
-		$user = $this->session->all_userdata()['user'];
+		$user_data = $this->session->all_userdata();
+		$user = $user_data['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
@@ -215,7 +218,8 @@ class Auth extends MY_Controller {
 			), 401);
 		}
 
-		$user = $this->session->all_userdata()['user'];
+		$user_data = $this->session->all_userdata();
+		$user = $user_data['user'];
 
 		// verify admin status
 		if ($user['admin'] === false) {
