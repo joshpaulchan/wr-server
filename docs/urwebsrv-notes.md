@@ -20,4 +20,6 @@ PHP 5.2.9 Deployment checklist
     use UAParser\Parser; -> require_once()
     ```
 
-- [ ] lmao
+3. Cannot use `__DIR__`.
+
+Use `APPATH` instead. It's equivalent to: `'application/'`.
