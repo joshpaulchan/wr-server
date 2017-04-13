@@ -46,8 +46,7 @@ class Users_model extends CI_Model {
 
         // fetch n users with num_skips
 		// Thanks @Jani Hartikainen for the array-map-using-method solution (http://stackoverflow.com/questions/1077491/can-a-method-be-used-as-a-array-map-function-in-php-5-2)
-        return array_map(array($this, "_format_user_object"),
-			$this->db
+        return array_map(array($this, "_format_user_object"), $this->db
 				->get_where('users', array('approved' => (bool)$approval), $n, $num_skips)
 				->result_array());
     }
@@ -125,7 +124,8 @@ class Users_model extends CI_Model {
 	public function create($email, $password) {
 		$user = array(
 			'email'		=> $email,
-			'password'	=> $password
+			'password'	=> $password,
+			'createdAt'	=> date('Y-m-d H:i:s')
 		);
 
 		// insert user and message

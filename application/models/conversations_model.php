@@ -78,7 +78,8 @@ class Conversations_model extends CI_Model {
 			'emailFrom'			=> $sentBy,
 			'emailTo'			=> $sentTo,
 			'body'				=> $body,
-			'conversation_id'	=> $id
+			'conversation_id'	=> $id,
+			'createdAt'			=> date('Y-m-d H:i:s')
 		);
 
 		if ($this->db->insert('messages', $message)) {
@@ -114,26 +115,27 @@ class Conversations_model extends CI_Model {
 			'os'			=> $data['os'],
 			'ip'			=> $data['ip'],
 			'referrer'		=> $data['referrer'],
+			'createdAt'		=> date('Y-m-d H:i:s')
 		);
 
 		// insert conversation and message
 		$convo = $this->db->insert('conversations', $conversation);
 		$convo_id = $this->db->insert_id();
 
-		$message = array(
-			'emailFrom'			=> $sentBy,
-			'emailTo'			=> $this->config->item('webresponse_email'),
-			'body'				=> $body,
-			'conversation_id'	=> $convo_id
+		$res = $this->create_reply(
+			$convo_id,
+			$this->config->item('webresponse_email'),
+			$sentBy,
+			$body
 		);
 
-		if ($this->db->insert('messages', $message)) {
-			return $this->get_conversation($convo_id);
-		} else {
+		if (array_key_exists("error", $res)) {
 			return array(
 				"error" => true,
 				"message" => "Error saving conversation to the database."
 			);
+		} else {
+			return $res;
 		}
 	}
 
