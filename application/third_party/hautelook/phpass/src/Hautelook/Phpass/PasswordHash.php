@@ -1,6 +1,5 @@
 <?php
 
-// require_once APPPATH.'third_party/paragonie/random_compat/psalm-autoload.php';
 // namespace Hautelook\Phpass;
 // NOTE: this function was added because PHP <= 5.6 won't support hash_equals
 // Thanks @srotondo90 (http://php.net/manual/en/function.hash-equals.php#119576)

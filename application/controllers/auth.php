@@ -32,7 +32,7 @@ class Auth extends MY_Controller {
 	**/
 	public function login() {
 		// Access variables
-		$json_data = json_decode(file_get_contents('php://input'), TRUE);
+		$json_data = $this->get_json();
 		$email = $json_data['email'];
 		$pw = $json_data['password'];
 
@@ -107,7 +107,7 @@ class Auth extends MY_Controller {
 	**/
 	public function register() {
 		// access data values
-		$json_data = json_decode(file_get_contents('php://input'), TRUE);
+		$json_data = $this->get_json();
 		$email = $json_data['email'];
 		$pw = $json_data['password'];
 
