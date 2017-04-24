@@ -37,6 +37,9 @@ class Conversation extends MY_Controller {
 	public function index($id) {
 		// fetch conversation and its messages
 		$data = $this->conversations_model->get_conversation($id);
+
+		// mark it as read
+		$this->conversations_model->set_unread($id, false);
 		return $this->_send_json($data);
 	}
 
