@@ -140,6 +140,44 @@ class Conversations_model extends CI_Model {
 	}
 
 	/**
+	* Updates the 'unread' attribute of the conversation object with the given
+	* conversation id.
+	*
+	* @pre		: the given `$id` should be a valid conversation id
+	* @post		: the given `$read` paramater must be a boolean
+	* @post		: the `unread` column of the conversation record will be changed
+	*
+	* @param	: int		: $id	: the id of the conversation to retrieve
+	* @param	: bool		: $id	: the new unread status of the conversation
+	* @return	: null
+	**/
+	public function set_unread($id, $read) {
+		$this->db->update('conversations',
+			array('unread' => (bool)$read),
+			array('id' => $id)
+		);
+	}
+
+	/**
+	* Updates the 'unreplied' attribute of the conversation object with the
+	* given conversation id.
+	*
+	* @pre		: the given `$id` should be a valid conversation id
+	* @post		: the given `$replied` paramater must be a boolean
+	* @post		: the `unreplied` column of the conversation record will be changed
+	*
+	* @param	: int		: $id	: the id of the conversation to retrieve
+	* @param	: bool		: $id	: the new unreplied status of the conversation
+	* @return	: null
+	**/
+	public function set_unreplied($id, $replied) {
+		$this->db->update('conversations',
+			array('unreplied' => (bool)$replied),
+			array('id' => $id)
+		);
+	}
+
+	/**
 	* Format the given conversation object for more accurate data types.
 	*
 	* @pre		: the given `$c` should be an associative array
