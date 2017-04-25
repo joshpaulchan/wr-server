@@ -93,6 +93,7 @@ class Conversation extends MY_Controller {
 				$our['email'],
 				$full_body
 			);
+			$this->conversations_model->set_unreplied($convo['id'], false);
 		} catch (Exception $e) {
 			$resp = array(
 				"error" => true,
