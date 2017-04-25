@@ -149,18 +149,18 @@ class Conversation extends MY_Controller {
 		$this->email->subject('fwd: ['.$convo['id'].'] - '.$convo['subject']);
 		$this->email->message($full_body);
 
+
 		try {
 			$this->email->send();
-			// TODO: create forward record
-			// $resp = $this->conversations_model->create_reply(
-			// 	$id,
-			// 	$convo['emailFrom'],
-			// 	$our['email'],
-			// 	$full_body
-			// );
-			$resp = array(
-				'error' => false
+			// FIXME: create own forward record in a forward table?
+			$full_body = "<small>forwarded to: <strong>".$forwardTo."</strong></small><br/><br/>".$full_body;
+			$resp = $this->conversations_model->create_reply(
+				$id,
+				$convo['emailFrom'],
+				$our['email'],
+				$full_body
 			);
+			$resp = array('error' => false);
 		} catch (Exception $e) {
 			$resp = array(
 				"error" => true,
